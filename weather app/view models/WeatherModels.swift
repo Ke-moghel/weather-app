@@ -1,5 +1,5 @@
 
-
+import Foundation
 import SwiftUI
 
 struct WeatherDay: Identifiable {
@@ -9,7 +9,6 @@ struct WeatherDay: Identifiable {
 //    let weatherIcon: String
     let weatherIconURL: String
 }
-
 
 struct WeatherResponse: Codable {
     let name: String 
@@ -34,17 +33,10 @@ struct Main: Codable {
     }
 }
 
-
-import Foundation
-
-
-
 //struct Weather: Codable {
 //    let description: String
 //    let icon: String
 //}
-
-
 
 struct Weather: Codable {
     let description: String
@@ -54,7 +46,6 @@ struct Weather: Codable {
         return "https://openweathermap.org/img/wn/\(icon)@2x.png"
     }
 }
-
 
 struct ForecastResponse: Codable {
     let list: [ForecastDay]
