@@ -24,3 +24,4 @@ Usage
 Future Improvements
 * Dependency injection
 * Dark mode customization.
+* Has over 60% test coverage. Could Cover more with UI Test
