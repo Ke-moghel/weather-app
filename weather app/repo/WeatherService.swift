@@ -17,7 +17,6 @@ class WeatherService {
         }
         return url
     }
-
     
     private let cacheKeyCurrentWeather = "cachedCurrentWeather"
     private let cacheKeyForecast = "cachedForecast"
