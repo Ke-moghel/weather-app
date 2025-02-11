@@ -1,4 +1,4 @@
-WeatherView - SwiftUI Weather App
+ SwiftUI Weather App
 Overview
 WeatherView is a SwiftUI-based weather application that displays the current weather, a weekly forecast, and allows users to save locations. The app features a clean,, dynamic icons, and a toast notification for saved locations.
 Features
