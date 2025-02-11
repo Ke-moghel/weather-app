@@ -2,24 +2,44 @@
 import SwiftUI
 import SwiftData
 
+import SwiftUI
+
 struct WeatherView: View {
     @ObservedObject var viewModel: WeatherViewModel
     @Query private var locations: [FavoriteLocation]
     @Environment(\.modelContext) private var modelContext
     @State private var showToast = false
-
+    
+    private var backgroundImage: String {
+        let condition = viewModel.weatherCondition.lowercased()
+        
+        if condition.contains("cloud") {
+            return "cloudy"
+        } else if condition.contains("rain") {
+            return "rainy"
+        } else if condition.contains("sun") {
+            return "sunny"
+        } else {
+            return "sunny" // Default fallback
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(gradient: Gradient(colors: [.blue, .black]), startPoint: .top, endPoint: .bottom)
+                Image(backgroundImage)
+                    .resizable()
+                    .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2.5)
+                
                 VStack(spacing: 20) {
                     Text("Weather in \(viewModel.city)")
                         .font(.title2)
                         .bold()
                         .foregroundColor(.white)
-
+                    
                     if viewModel.currentTemperature == 0 && viewModel.weatherCondition == "Sunny" {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -29,12 +49,12 @@ struct WeatherView: View {
                             Text("\(viewModel.currentTemperature)°")
                                 .font(.system(size: 70, weight: .bold))
                                 .foregroundColor(.white)
-
+                            
                             Text(viewModel.weatherCondition)
                                 .font(.title2)
                                 .foregroundColor(.white)
                         }
-
+                        
                         if let url = URL(string: viewModel.weatherIconURL) {
                             AsyncImage(url: url) { image in
                                 image
@@ -46,7 +66,7 @@ struct WeatherView: View {
                             .frame(width: 80, height: 80)
                         }
                     }
-
+                    
                     if !viewModel.forecast.isEmpty {
                         List(viewModel.forecast, id: \.day) { day in
                             HStack {
@@ -55,7 +75,7 @@ struct WeatherView: View {
                                     .foregroundColor(.white)
 
                                 Spacer()
-
+                                
                                 if let url = URL(string: day.weatherIconURL) {
                                     AsyncImage(url: url) { image in
                                         image
@@ -67,7 +87,7 @@ struct WeatherView: View {
                                     }
                                     .frame(width: 40, height: 40)
                                 }
-
+                                
                                 Text("\(day.temperature)°")
                                     .font(.headline)
                                     .foregroundColor(.white)
@@ -80,8 +100,7 @@ struct WeatherView: View {
                     }
                 }
                 .padding()
-
-               
+                
                 if showToast {
                     VStack {
                         Spacer()
@@ -97,27 +116,26 @@ struct WeatherView: View {
                 }
             }
             .navigationTitle("Weather")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button(action: saveLocation) {
                         Label("Save", systemImage: "heart.fill")
                     }
                     .foregroundColor(.red)
-
+                    
                     NavigationLink(destination: FavoriteLocationsView()) {
                         Label("Saved", systemImage: "list.dash")
                     }
-
+                    
                     NavigationLink(destination: MapView(locations: locations, viewModel: viewModel)) {
                         Label("Saved", systemImage: "map")
                     }
-
                 }
             }
         }
     }
-
-
+    
     private func saveLocation() {
         let newLocation = FavoriteLocation(
             name: viewModel.city,
@@ -127,39 +145,19 @@ struct WeatherView: View {
             dateSaved: Date()
         )
         modelContext.insert(newLocation)
-
+        
         withAnimation {
             showToast = true
         }
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation {
                 showToast = false
             }
         }
     }
-
-
-
-//    private func saveLocation() {
-//        let newLocation = FavoriteLocation(
-//            name: viewModel.city,
-//            latitude: viewModel.latitude,
-//            longitude: viewModel.longitude
-//        )
-//        modelContext.insert(newLocation)
-//
-//        withAnimation {
-//            showToast = true
-//        }
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            withAnimation {
-//                showToast = false
-//            }
-//        }
-//    }
 }
+
 
 
 @Model

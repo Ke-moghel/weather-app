@@ -1,8 +1,4 @@
 
-
-
-
-
 import SwiftUI
 import SwiftData
 import MapKit
@@ -30,6 +26,7 @@ struct WeatherApp: App {
         WindowGroup {
             WeatherView(viewModel: WeatherViewModel())
                 .environment(\.modelContext, sharedModelContainer.mainContext)
+                .preferredColorScheme(.dark)
         }
     }
 }
