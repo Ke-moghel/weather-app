@@ -1,9 +1,3 @@
-//
-//  weather_appUITestsLaunchTests.swift
-//  weather appUITests
-//
-//  Created by Kamogelo Matjila on 2025/01/26.
-//
 
 import XCTest
 

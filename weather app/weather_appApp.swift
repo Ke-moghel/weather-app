@@ -1,17 +1,35 @@
-//
-//  weather_appApp.swift
-//  weather app
-//
-//  Created by Kamogelo Matjila on 2025/01/26.
-//
+
+
+
+
 
 import SwiftUI
+import SwiftData
+import MapKit
+import UIKit
+
+
 
 @main
-struct weather_appApp: App {
+struct WeatherApp: App {
+    
+    var sharedModelContainer: ModelContainer = {
+        
+        let schema = Schema([FavoriteLocation.self])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Failed to initialize ModelContainer: \(error)")
+        }
+    }()
+
     var body: some Scene {
+       
         WindowGroup {
-            ContentView()
+            WeatherView(viewModel: WeatherViewModel())
+                .environment(\.modelContext, sharedModelContainer.mainContext)
         }
     }
 }
